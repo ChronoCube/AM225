@@ -1,1 +1,5 @@
 one
+two
+*.o
+*.swp
+am225_hw1_files
