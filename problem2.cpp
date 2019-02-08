@@ -1,3 +1,4 @@
+#include "timer.h"
 #include <array>
 #include <cstring>
 #include <iostream>
@@ -5,7 +6,6 @@
 #include <utility>
 
 using std::cout;
-
 
 struct Grid {
   int m;
@@ -59,22 +59,13 @@ struct Grid {
   }
 
   const int &operator()(int i, int j) const { return grid[n * i + j]; }
-
   int &operator()(int i, int j) { return grid[n * i + j]; }
-
-  int sum() const {
-    int count = 0;
-    for (int i = 0; i < m; i++) {
-      for (int j = 0; j < n; j++) {
-        count += operator()(i, j);
-      }
-    }
-    return count;
-  }
 };
 
-Grid evolve(const Grid &grid) {
+Grid evolve(const Grid &grid, int nthreads) {
   Grid next(grid.m, grid.n);
+
+#pragma omp parallel for collapse(2) num_threads(nthreads)
   for (int i = 0; i < grid.m; i++) {
     for (int j = 0; j < grid.n; j++) {
       int n = grid.neighbors(i, j);
@@ -88,14 +79,32 @@ Grid evolve(const Grid &grid) {
   return next;
 }
 
+void print_grid(const Grid &grid) {
+  for (int i = 0; i < grid.m; i++) {
+    for (int j = 0; j < grid.n; j++) {
+      if (grid(i, j))
+        cout << "█";
+      else
+        cout << ' ';
+    }
+    cout << '\n';
+  }
+  return;
+}
+
+int sum_grid(const Grid &grid) {
+  int count = 0;
+  for (int i = 0; i < grid.m; i++) {
+    for (int j = 0; j < grid.n; j++) {
+      count += grid(i, j);
+    }
+  }
+  return count;
+}
+
 int main(int argc, char **argv) {
-  int M = 80;
-  int N = 40;
+ #include "problem2a.cpp"
+  
 
-  Grid grid(M, N);
-
-  Grid newgrid = evolve(grid);
-  cout << grid.sum() << '\n';
-  cout << newgrid.sum() << '\n';
   return 0;
 }
