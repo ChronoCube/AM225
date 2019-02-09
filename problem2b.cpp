@@ -1,20 +1,27 @@
-std::vector<int> sizes = {16, 32, 64, 128, 256, 512, 1024, 2048};
-std::vector<int> nthreads = {1, 2, 3, 4};
+#include "grid.h"
+#include "timer.h"
+#include <iostream>
 
-cout << "n" << '\t' << "T" << '\t' << "w" << '\n';
-for (auto&& n : sizes) {
-  for (auto&& t : nthreads) {
-    Grid grid(n, n);
+using std::cout;
 
-    Timer timer;
+int main(int argc, char **argv) {
+    std::vector<int> sizes = {16, 32, 64, 128, 256, 512, 1024, 2048};
+    std::vector<int> nthreads = {1, 2, 3, 4};
 
-    for (int x = 0; x < (n < 512 ? 500 : 250); x++)
-      grid = evolve(grid, t);
+    cout << "n" << '\t' << "T" << '\t' << "w" << '\n';
+    for (auto &&n : sizes) {
+        for (auto &&t : nthreads) {
+            Grid grid(n, n);
 
-    cout << n << '\t' << t << '\t' << timer.elapsed()/100 << '\n';
+            Timer timer;
 
-  }
+            for (int x = 0; x < (n < 512 ? 500 : 250); x++)
+                grid = evolve(grid, t);
+
+            cout << n << '\t' << t << '\t' << timer.elapsed() / 100 << '\n';
+        }
+    }
+
+    return 0;
 }
-
-
 

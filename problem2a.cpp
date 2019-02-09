@@ -1,15 +1,25 @@
-int m = 80;
-int n = 40;
+#include "grid.h"
+#include "timer.h"
+#include <iostream>
 
-int generation = 0;
-Grid g(m,n);
+using std::cout;
 
-do {
-  if (generation % 25 == 0) {
-    print_grid(g);
-    cout << "\n\n\n";
-  }
+int main(int argc, char **argv) {
+    int m = 80;
+    int n = 40;
 
-  g = evolve(g, 2);
-  generation++;
-} while (generation <= 150);
+    int generation = 0;
+    Grid g(m, n);
+
+    do {
+        if (generation % 25 == 0) {
+            print_grid(g);
+            cout << "\n\n\n";
+        }
+
+        g = evolve(g, 2);
+        generation++;
+    } while (generation <= 150);
+
+    return 0;
+}
