@@ -1,9 +1,9 @@
+#include "grid.h"
+#include "omp.h"
 #include <cstring>
 #include <iostream>
 #include <random>
 #include <utility>
-#include "grid.h"
-#include "omp.h"
 
 Grid::Grid(int m_, int n_) : m(m_), n(n_), grid(new int[m * n]) {
     for (int x = 0; x < m * n; x++) {
@@ -25,7 +25,7 @@ Grid::Grid(const Grid &other) : m(other.m), n(other.n), grid(new int[m * n]) {
     std::memcpy(grid, other.grid, sizeof(int) * m * n);
 }
 
-Grid& Grid::operator=(Grid other) {
+Grid &Grid::operator=(Grid other) {
     m = other.m;
     n = other.n;
 
@@ -54,8 +54,32 @@ int Grid::neighbors(int i, int j) const {
     return count;
 }
 
-const int& Grid::operator()(int i, int j) const { return grid[n * i + j]; }
-int& Grid::operator()(int i, int j) { return grid[n * i + j]; }
+const int &Grid::operator()(int i, int j) const {
+    if (i < 0) {
+        i = m + i;
+    } else if (i >= m) {
+        i = i - m;
+    }
+    if (j < 0) {
+        j = n + j;
+    } else if (j >= n) {
+        j = j - n;
+    }
+    return grid[n * i + j];
+}
+int &Grid::operator()(int i, int j) {
+    if (i < 0) {
+        i = m + i;
+    } else if (i >= m) {
+        i = i - m;
+    }
+    if (j < 0) {
+        j = n + j;
+    } else if (j >= n) {
+        j = j - n;
+    }
+    return grid[n * i + j];
+}
 
 Grid evolve(const Grid &grid, int nthreads = 0) {
     Grid next(grid.m, grid.n);

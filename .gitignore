@@ -1,6 +1,6 @@
-one
-two-a
-two-b
+*.bin
 *.o
 *.swp
+*.out
 am225_hw1_files
+
