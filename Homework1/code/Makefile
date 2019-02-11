@@ -5,10 +5,13 @@ INC=-I../../common/include
 COMMON_HEADERS=timer.h ../../common/include/cleantype/cleantype.hpp
 COMMON_OBJS=format.o
 
-EXE=one.bin two-a.bin two-b.bin three-a.bin three-b.bin three-c.bin three-d.bin
+EXE=one.bin two-a.bin two-b.bin three-a.bin three-b.bin three-c.bin three-d.bin four-a.bin
 
 
 all : $(EXE)
+
+four-a.bin : problem4a.cpp sudoku.o $(COMMON_HEADERS) $(COMMON_OBJS)
+	$(CXX) $(CFLAGS) $(INC) problem4a.cpp sudoku.o $(COMMON_OBJS) -o four-a.bin
 
 three-d.bin : problem3d.cpp $(COMMON_HEADERS) $(COMMON_OBJS) problem3.o
 	$(CXX) $(CFLAGS) $(INC) problem3d.cpp problem3.o $(COMMON_OBJS) -o three-d.bin
@@ -36,6 +39,9 @@ problem3.o : problem3.cpp problem3.h
 
 format.o : ../../common/format.cc
 	$(CXX) $(INC) -std=c++14 -O2 -march=native -c ../../common/format.cc -o format.o
+
+sudoku.o : sudoku.cpp sudoku.h
+	$(CXX) $(CFLAGS) $(INC) -c sudoku.cpp -o sudoku.o
 
 grid.o : grid.cpp grid.h
 	$(CXX) $(CFLAGS) $(INC) -c grid.cpp -o grid.o
