@@ -5,10 +5,16 @@ INC=-I../../common/include
 COMMON_HEADERS=timer.h ../../common/include/cleantype/cleantype.hpp
 COMMON_OBJS=format.o
 
-EXE=one.bin two-a.bin two-b.bin three-a.bin three-b.bin three-c.bin three-d.bin four-a.bin
+EXE=one.bin two-a.bin two-b.bin three-a.bin three-b.bin three-c.bin three-d.bin four-a.bin four-b.bin four-c.bin
 
 
 all : $(EXE)
+
+four-c.bin : problem4c.cpp sudoku.o $(COMMON_HEADERS) $(COMMON_OBJS)
+	$(CXX) $(CFLAGS) $(INC) problem4c.cpp sudoku.o $(COMMON_OBJS) -o four-c.bin
+
+four-b.bin : problem4b.cpp sudoku.o $(COMMON_HEADERS) $(COMMON_OBJS)
+	$(CXX) $(CFLAGS) $(INC) problem4b.cpp sudoku.o $(COMMON_OBJS) -o four-b.bin
 
 four-a.bin : problem4a.cpp sudoku.o $(COMMON_HEADERS) $(COMMON_OBJS)
 	$(CXX) $(CFLAGS) $(INC) problem4a.cpp sudoku.o $(COMMON_OBJS) -o four-a.bin

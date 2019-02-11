@@ -11,21 +11,23 @@ using sudoku::Sudoku;
 int main(int argc, char **argv) {
     // clang-format off
     std::array<int, 81> input = {{
-        1, 0, 0, 9, 0, 7, 0, 0, 3,
-        0, 8, 0, 0, 0, 0, 0, 7, 0,
-        0, 0, 9, 0, 0, 0, 6, 0, 0,
-        0, 0, 7, 2, 0, 9, 4, 0, 0,
-        4, 1, 0, 0, 0, 0, 0, 9, 5, 
-        0, 0, 8, 5, 0, 4, 3, 0, 0,
-        0, 0, 3, 0, 0, 0, 7, 0, 0,
+        1, 0, 0, 0, 0, 0, 0, 0, 2,
         0, 5, 0, 0, 0, 0, 0, 4, 0,
-        2, 0, 0, 8, 0, 6, 0, 0, 9
+        0, 0, 9, 0, 0, 0, 6, 0, 0,
+        0, 0, 0, 1, 0, 2, 0, 0, 0,
+        0, 0, 0, 0, 8, 0, 0, 0, 0,
+        0, 0, 0, 6, 0, 9, 0, 0, 0,
+        0, 0, 2, 0, 0, 0, 1, 0, 0,
+        0, 4, 0, 0, 0, 0, 0, 5, 0,
+        6, 0, 0, 0, 0, 0, 0, 0, 9
     }};
     // clang-format on
 
     auto puzzle = from_array(input);
-    auto solutions = sudoku::solve(puzzle);
+    print_sudoku(puzzle);
+    print("\n");
 
+    auto solutions = sudoku::solve(puzzle);
     print("Number of solutions: {}. ", solutions.size());
     print("Here is one of them:\n", solutions.size());
     print_sudoku(solutions[0]);
