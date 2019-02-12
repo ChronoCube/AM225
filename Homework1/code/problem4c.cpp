@@ -27,10 +27,9 @@ int main(int argc, char **argv) {
     print_sudoku(puzzle);
     print("\n");
 
-    auto solutions = sudoku::solve(puzzle);
-    print("Number of solutions: {}. ", solutions.size());
-    print("Here is one of them:\n", solutions.size());
-    print_sudoku(solutions[0]);
+    auto count = sudoku::count_solutions(puzzle);
+    print("Number of solutions: {}.\n", count);
+
 
     return 0;
 }

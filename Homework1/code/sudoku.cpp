@@ -9,6 +9,7 @@ using std::endl;
 
 namespace chronocube {
 namespace sudoku {
+#include "sudoku_const.data"
 
 Sudoku from_array(std::array<int, 81> input) {
     Sudoku sudoku;
@@ -72,9 +73,7 @@ char mask_to_integer(const sudoku::DigitMask &dm) {
     return '0';
 }
 
-#include "sudoku_const.data"
-
-bool singleton_mask(const DigitMask &dm) { return dm.count() == 1; }
+bool is_singleton(const DigitMask &dm) { return dm.count() == 1; }
 
 int first_empty_place(const Sudoku &s) {
     for (int i = 0; i < 81; i++) {
@@ -91,20 +90,59 @@ bool coherent(const Sudoku &s) {
         if (x.none())
             return false;
     }
+    return true;
 
-    for (std::size_t n = 0; n < 81; n++) {
-        for (std::size_t d = 0; d < 9; d++) {
-            if (s[n].count() == 1) {
-                for (auto &&cell : ASSOCIATIONS[n]) {
-                    if (s[cell] == s[n])
-                        return false;
-                }
+    // check each group for discrepancy
+    for (auto &&g : GROUPS) {
+        std::array<int, 9> counts{};
+
+        for (auto &&cell : g) {
+            if (s[cell] == ONE) {
+                if ((counts[0] += 1) >= 2) return false;
+            } else if (s[cell] == TWO) {
+                if ((counts[1] += 1) >= 2) return false;
+            } else if (s[cell] == THREE) {
+                if ((counts[2] += 1) >= 2) return false;
+            } else if (s[cell] == FOUR) {
+                if ((counts[3] += 1) >= 2) return false;
+            } else if (s[cell] == FIVE) {
+                if ((counts[4] += 1) >= 2) return false;
+            } else if (s[cell] == SIX) {
+                if ((counts[5] += 1) >= 2) return false;
+            } else if (s[cell] == SEVEN) {
+                if ((counts[6] += 1) >= 2) return false;
+            } else if (s[cell] == EIGHT) {
+                if ((counts[7] += 1) >= 2) return false;
+            } else if (s[cell] == NINE) {
+                if ((counts[8] += 1) >= 2) return false;
             }
         }
     }
-
     return true;
 }
+
+
+void reduce(Sudoku& s) {
+    bool changed = false;
+    for (std::size_t i = 0; i < 81; i++) {
+        DigitMask taken;
+        for (auto&& cell : ASSOCIATIONS[i]) {
+            if (s[cell].count() == 1)
+                taken = taken | s[cell];
+        }
+        const auto change = s[i] & (~taken);
+        if (s[i] != change) {
+            changed = true;
+            s[i] = change;
+        }
+    }
+
+    if (changed) {
+        reduce(s);
+    }
+    return;
+}
+
 
 std::vector<DigitMask> possible_digits(const DigitMask &mask) {
     std::vector<DigitMask> possibilities;
@@ -119,14 +157,27 @@ std::vector<DigitMask> possible_digits(const DigitMask &mask) {
 
 Sudoku fill_in(Sudoku s, int n, const DigitMask &mask) {
     s[n] = mask;
-
-    for (auto &&i : ASSOCIATIONS[n]) {
-        s[i] = s[i] & (~mask);
-    }
-
+    reduce(s);
     return s;
 }
 
+int count_solutions(const Sudoku &sudoku) {
+    if (sudoku::coherent(sudoku) == false)
+        return 0;
+
+    if (sudoku::completed(sudoku)) {
+        return 1;
+    }
+
+    int slot = sudoku::first_empty_place(sudoku);
+
+    int count = 0;
+    for (auto &&possibility : sudoku::possible_digits(sudoku[slot])) {
+        auto s = sudoku::fill_in(sudoku, slot, possibility);
+        count += count_solutions(s);
+    }
+    return count;
+}
 std::vector<Sudoku> solve(const Sudoku &sudoku) {
     if (sudoku::coherent(sudoku) == false)
         return {};

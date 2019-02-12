@@ -24,11 +24,11 @@ int main(int argc, char **argv) {
     // clang-format on
 
     auto puzzle = from_array(input);
-    auto solutions = sudoku::solve(puzzle);
+    auto solutions = sudoku::count_solutions(puzzle);
 
-    print("Number of solutions: {}. ", solutions.size());
-    print("Here is one of them:\n", solutions.size());
-    print_sudoku(solutions[0]);
+    print("Number of solutions: {}.\n", solutions);
+    // print("Here is one of them:\n", solutions.size());
+    // print_sudoku(solutions[0]);
 
     return 0;
 }

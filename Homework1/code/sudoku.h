@@ -31,10 +31,13 @@ const DigitMask BLANK =
 int first_empty_place(const Sudoku &s);
 bool completed(const Sudoku &s);
 bool coherent(const Sudoku &s);
-bool singleton_mask(const DigitMask &dm);
+bool is_singleton(const DigitMask &dm);
 std::vector<DigitMask> possible_digits(const DigitMask &mask);
 Sudoku fill_in(Sudoku s, int n, const DigitMask &mask);
 
+
+void reduce(Sudoku& s);
 std::vector<Sudoku> solve(const Sudoku &sudoku);
+int count_solutions(const Sudoku &sudoku);
 } // namespace sudoku
 } // namespace chronocube
