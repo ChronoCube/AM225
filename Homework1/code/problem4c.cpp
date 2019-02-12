@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
     print_sudoku(puzzle);
     print("\n");
 
-    auto count = sudoku::count_solutions(puzzle);
+    auto count = sudoku::count_solutions_parallel(puzzle);
     print("Number of solutions: {}.\n", count);
 
 

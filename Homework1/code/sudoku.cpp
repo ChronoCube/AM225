@@ -138,6 +138,47 @@ int count_solutions(const Sudoku &sudoku) {
     }
     return count;
 }
+
+int count_solutions_parallel(const Sudoku &sudoku) {
+    if (sudoku::completed(sudoku)) {
+        return 1;
+    }
+
+    const int slot = sudoku::first_empty_place(sudoku);
+
+    // fast bail-out if we're close to the end
+    if (slot >= 75)
+        return count_solutions(sudoku);
+
+    auto possibilities = possible_digits(sudoku[slot]);
+    auto n = possibilities.size();
+
+    std::vector<int *> counts(n);
+    for (decltype(n) i = 0; i < n; i++) {
+        counts[i] = new int();
+    }
+
+#pragma omp parallel
+#pragma omp single nowait
+    {
+#pragma omp taskloop firstprivate(counts)
+        for (decltype(n) i = 0; i < n; i++) {
+            Sudoku copy = sudoku;
+            auto valid = sudoku::fill_in(copy, slot, possibilities[i]);
+            if (valid)
+                *counts[i] = count_solutions(copy);
+        }
+
+#pragma omp taskwait
+    }
+    int count = 0;
+    for (decltype(n) i = 0; i < n; i++) {
+        count += *counts[i];
+        delete counts[i];
+    }
+    return count;
+}
+
 std::vector<Sudoku> solve(const Sudoku &sudoku) {
     if (sudoku::completed(sudoku)) {
         return {sudoku};

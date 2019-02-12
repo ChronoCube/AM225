@@ -37,5 +37,6 @@ bool fill_in(Sudoku &s, int n, const DigitMask &mask);
 bool reduce_at(Sudoku &s, int n);
 std::vector<Sudoku> solve(const Sudoku &sudoku);
 int count_solutions(const Sudoku &sudoku);
+int count_solutions_parallel(const Sudoku &sudoku);
 } // namespace sudoku
 } // namespace chronocube
