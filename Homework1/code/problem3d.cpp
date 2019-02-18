@@ -32,9 +32,9 @@ int main(int argc, char** argv) {
         auto result = long_division(d, base, p);
 
         if (result.second == 0) {
-            print("@{}\n", p);
-        } else {
             print("{}\n", p);
+        } else {
+            // print("{}\n", p);
         }
 
     }

@@ -5,7 +5,11 @@
 #include <random>
 #include <utility>
 
+
 Grid::Grid(int m_, int n_) : m(m_), n(n_), grid(new int[m * n]) {
+    // by default, we represent our grid as a single-dimensional
+    // array. The overloaded function operator() allows
+    // for Cartesian indexing as in *this(i, j).
     for (int x = 0; x < m * n; x++) {
         grid[x] = 0;
     }
@@ -13,6 +17,10 @@ Grid::Grid(int m_, int n_) : m(m_), n(n_), grid(new int[m * n]) {
     std::random_device r;
     std::default_random_engine engine(r());
     std::bernoulli_distribution bernoulli(0.75);
+
+// The construction of the grid class automatically
+// inserts 1's into the middle of the grid, as reuqired
+// by the problem.
 
     for (int i = m / 2 - 6; i <= m / 2 + 6; i++) {
         for (int j = n / 2 - 6; j <= n / 2 + 6; j++) {
@@ -37,23 +45,24 @@ Grid &Grid::operator=(Grid other) {
 
 Grid::~Grid() { delete[] grid; }
 
+
+// count the number of alive neighbors at
+// location (i, j). Fairly straightforward, except we do some bounds
+// checking to makes 
 int Grid::neighbors(int i, int j) const {
     int count = -operator()(i, j);
 
-    int x_low = (i == 0) ? 0 : -1;
-    int x_high = (i == m - 1) ? 0 : 1;
-
-    int y_low = (j == 0) ? 0 : -1;
-    int y_high = (j == n - 1) ? 0 : 1;
-
-    for (int x = x_low; x <= x_high; x++) {
-        for (int y = y_low; y <= y_high; y++) {
+    for (int x = -1; x <= 1; x++) {
+        for (int y = -1; y <= 1; y++) {
             count += operator()(i + x, j + y);
         }
     }
     return count;
 }
 
+
+// allow for Cartesian indexing
+// There is some custom logic because the grid is periodic.
 const int &Grid::operator()(int i, int j) const {
     if (i < 0) {
         i = m + i;
@@ -81,6 +90,10 @@ int &Grid::operator()(int i, int j) {
     return grid[n * i + j];
 }
 
+
+
+// the key function. Takes in a grid and returns
+// its update.
 Grid evolve(const Grid &grid, int nthreads = 0) {
     Grid next(grid.m, grid.n);
 

@@ -1,5 +1,7 @@
 #include "sudoku.h"
+#include "timer.h"
 #include <fmt/format.h>
+#include <vector>
 
 using fmt::print;
 
@@ -22,10 +24,17 @@ int main(int argc, char **argv) {
         2, 0, 0, 8, 0, 6, 0, 0, 9
     }};
     // clang-format on
-
     auto puzzle = from_array(input);
-    auto solutions = sudoku::solve(puzzle);
+    int ntimes = 1000;
 
+    Timer t;
+    for (int i = 0; i < ntimes; i++) {
+        auto solutions = sudoku::solve(puzzle);
+    }
+    print("Time (milliseconds) to repeat {} times: {}.\n", ntimes, t.elapsed());
+    print("per time = {}\n", t.elapsed()/ntimes);
+
+    auto solutions = sudoku::solve(puzzle);
     print("Number of solutions: {}. ", solutions.size());
     print("Here is one of them:\n", solutions.size());
     print_sudoku(solutions[0]);

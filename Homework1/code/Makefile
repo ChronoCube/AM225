@@ -1,7 +1,7 @@
 CXX=g++
 CFLAGS=-std=c++14 -fopenmp -O2 -march=native -Wall -Wpedantic -g
 INC=-I../../common/include
-LDFLAGS=-lprofiler
+# LDFLAGS=-lprofiler # GooglePerf tools. 
 
 COMMON_HEADERS=timer.h ../../common/include/cleantype/cleantype.hpp
 COMMON_OBJS=format.o

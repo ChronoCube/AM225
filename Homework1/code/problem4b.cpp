@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
     // clang-format on
 
     auto puzzle = from_array(input);
-    auto solutions = sudoku::count_solutions_parallel(puzzle);
+    auto solutions = sudoku::count_solutions_parallel(puzzle, 1);
 
     print("Number of solutions: {}.\n", solutions);
     // print("Here is one of them:\n", solutions.size());
